@@ -1,0 +1,285 @@
+{
+	"info": {
+		"name": "KodeCreators Blog API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "Login",
+					"request": {
+						"method": "POST",
+						"header": [{"key": "Accept", "value": "application/json", "type": "text"}],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"test@example.com\",\n    \"password\": \"password\"\n}",
+							"options": {"raw": {"language": "json"}}
+						},
+						"url": {"raw": "{{base_url}}/v1/login", "host": ["{{base_url}}"], "path": ["v1", "login"]}
+					},
+					"response": [
+						{
+							"name": "200 Login Successful",
+							"originalRequest": {
+								"method": "POST",
+								"header": [{"key": "Accept", "value": "application/json"}],
+								"body": {"mode": "raw", "raw": "{\n    \"email\": \"test@example.com\",\n    \"password\": \"password\"\n}", "options": {"raw": {"language": "json"}}},
+								"url": {"raw": "{{base_url}}/v1/login", "host": ["{{base_url}}"], "path": ["v1", "login"]}
+							},
+							"status": "OK", "code": 200, "_postman_previewlanguage": "json",
+							"header": [{"key": "Content-Type", "value": "application/json"}],
+							"cookie": [],
+							"body": "{\n    \"success\": true,\n    \"message\": \"Login successful\",\n    \"data\": {\n        \"user\": {\n            \"id\": 1,\n            \"name\": \"Test User\",\n            \"email\": \"test@example.com\",\n            \"role\": \"admin\",\n            \"created_at\": \"2026-05-14T09:18:06.000000Z\"\n        },\n        \"token\": \"13|3Msx2DhH8HJkIoID6EbWhqfQsfDRO9xfE3DIs5lg635575d7\"\n    }\n}"
+						},
+						{
+							"name": "422 Invalid Credentials",
+							"originalRequest": {
+								"method": "POST",
+								"header": [{"key": "Accept", "value": "application/json"}],
+								"body": {"mode": "raw", "raw": "{\n    \"email\": \"test@example.com\",\n    \"password\": \"wrongpassword\"\n}", "options": {"raw": {"language": "json"}}},
+								"url": {"raw": "{{base_url}}/v1/login", "host": ["{{base_url}}"], "path": ["v1", "login"]}
+							},
+							"status": "Unprocessable Entity", "code": 422, "_postman_previewlanguage": "json",
+							"header": [{"key": "Content-Type", "value": "application/json"}],
+							"cookie": [],
+							"body": "{\n    \"success\": false,\n    \"message\": \"The provided credentials are incorrect.\",\n    \"data\": []\n}"
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "User",
+			"item": [
+				{
+					"name": "Get My Profile",
+					"request": {
+						"auth": {"type": "bearer", "bearer": [{"key": "token", "value": "{{token}}", "type": "string"}]},
+						"method": "GET",
+						"header": [{"key": "Accept", "value": "application/json", "type": "text"}],
+						"url": {"raw": "{{base_url}}/v1/user", "host": ["{{base_url}}"], "path": ["v1", "user"]}
+					}
+				},
+				{
+					"name": "Create User",
+					"request": {
+						"auth": {"type": "bearer", "bearer": [{"key": "token", "value": "{{token}}", "type": "string"}]},
+						"method": "POST",
+						"header": [{"key": "Accept", "value": "application/json", "type": "text"}],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"New Maintainer\",\n    \"email\": \"maintainer@example.com\",\n    \"password\": \"password\",\n    \"role\": \"maintainer\"\n}",
+							"options": {"raw": {"language": "json"}}
+						},
+						"url": {"raw": "{{base_url}}/v1/users", "host": ["{{base_url}}"], "path": ["v1", "users"]}
+					}
+				},
+				{
+					"name": "Update My Profile",
+					"request": {
+						"auth": {"type": "bearer", "bearer": [{"key": "token", "value": "{{token}}", "type": "string"}]},
+						"method": "PUT",
+						"header": [{"key": "Accept", "value": "application/json", "type": "text"}],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Updated Name\"\n}",
+							"options": {"raw": {"language": "json"}}
+						},
+						"url": {"raw": "{{base_url}}/v1/user/profile", "host": ["{{base_url}}"], "path": ["v1", "user", "profile"]}
+					}
+				}
+			]
+		},
+		{
+			"name": "Blog",
+			"item": [
+				{
+					"name": "List Blogs",
+					"request": {
+						"auth": {"type": "bearer", "bearer": [{"key": "token", "value": "{{token}}", "type": "string"}]},
+						"method": "GET",
+						"header": [{"key": "Accept", "value": "application/json", "type": "text"}],
+						"url": {
+							"raw": "{{base_url}}/v1/blogs?search=&sort_by=created_at&sort_dir=desc&page=1",
+							"host": ["{{base_url}}"],
+							"path": ["v1", "blogs"],
+							"query": [
+								{"key": "search", "value": "", "description": "Search by title, description, creator name or email"},
+								{"key": "sort_by", "value": "created_at", "description": "Options: title | description | comments_count | likes_count"},
+								{"key": "sort_dir", "value": "desc", "description": "Options: asc | desc"},
+								{"key": "page", "value": "1"}
+							]
+						}
+					}
+				},
+				{
+					"name": "Create Blog",
+					"request": {
+						"auth": {"type": "bearer", "bearer": [{"key": "token", "value": "{{token}}", "type": "string"}]},
+						"method": "POST",
+						"header": [{"key": "Accept", "value": "application/json", "type": "text"}],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{"key": "title", "value": "My First Blog Post", "type": "text"},
+								{"key": "description", "value": "This is the blog description content.", "type": "text"},
+								{"key": "image", "type": "file", "src": "", "disabled": true, "description": "Optional: jpg, png, webp | max 2MB"}
+							]
+						},
+						"url": {"raw": "{{base_url}}/v1/blogs", "host": ["{{base_url}}"], "path": ["v1", "blogs"]}
+					}
+				},
+				{
+					"name": "Update Blog",
+					"request": {
+						"auth": {"type": "bearer", "bearer": [{"key": "token", "value": "{{token}}", "type": "string"}]},
+						"method": "PUT",
+						"header": [{"key": "Accept", "value": "application/json", "type": "text"}],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"title\": \"Updated Blog Title\",\n    \"description\": \"Updated blog content here.\"\n}",
+							"options": {"raw": {"language": "json"}}
+						},
+						"url": {"raw": "{{base_url}}/v1/blogs/1", "host": ["{{base_url}}"], "path": ["v1", "blogs", "1"]}
+					}
+				},
+				{
+					"name": "Delete Blog",
+					"request": {
+						"auth": {"type": "bearer", "bearer": [{"key": "token", "value": "{{token}}", "type": "string"}]},
+						"method": "DELETE",
+						"header": [{"key": "Accept", "value": "application/json", "type": "text"}],
+						"url": {"raw": "{{base_url}}/v1/blogs/1", "host": ["{{base_url}}"], "path": ["v1", "blogs", "1"]}
+					}
+				}
+			]
+		},
+		{
+			"name": "Comment",
+			"item": [
+				{
+					"name": "List Comments",
+					"request": {
+						"auth": {"type": "bearer", "bearer": [{"key": "token", "value": "{{token}}", "type": "string"}]},
+						"method": "GET",
+						"header": [{"key": "Accept", "value": "application/json", "type": "text"}],
+						"url": {
+							"raw": "{{base_url}}/v1/blogs/1/comments?search=&sort_by=created_at&sort_dir=desc&page=1",
+							"host": ["{{base_url}}"],
+							"path": ["v1", "blogs", "1", "comments"],
+							"query": [
+								{"key": "search", "value": "", "description": "Search by description"},
+								{"key": "sort_by", "value": "created_at", "description": "Options: created_at | likes_count"},
+								{"key": "sort_dir", "value": "desc", "description": "Options: asc | desc"},
+								{"key": "page", "value": "1"}
+							]
+						}
+					}
+				},
+				{
+					"name": "Create Comment",
+					"request": {
+						"auth": {"type": "bearer", "bearer": [{"key": "token", "value": "{{token}}", "type": "string"}]},
+						"method": "POST",
+						"header": [{"key": "Accept", "value": "application/json", "type": "text"}],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"description\": \"This is an awesome blog post!\"\n}",
+							"options": {"raw": {"language": "json"}}
+						},
+						"url": {"raw": "{{base_url}}/v1/blogs/1/comments", "host": ["{{base_url}}"], "path": ["v1", "blogs", "1", "comments"]}
+					}
+				},
+				{
+					"name": "Delete Comment",
+					"request": {
+						"auth": {"type": "bearer", "bearer": [{"key": "token", "value": "{{token}}", "type": "string"}]},
+						"method": "DELETE",
+						"header": [{"key": "Accept", "value": "application/json", "type": "text"}],
+						"url": {"raw": "{{base_url}}/v1/blogs/1/comments/1", "host": ["{{base_url}}"], "path": ["v1", "blogs", "1", "comments", "1"]}
+					}
+				}
+			]
+		},
+		{
+			"name": "Like",
+			"item": [
+				{
+					"name": "Toggle Like (Polymorphic)",
+					"request": {
+						"auth": {"type": "bearer", "bearer": [{"key": "token", "value": "{{token}}", "type": "string"}]},
+						"method": "POST",
+						"header": [{"key": "Accept", "value": "application/json", "type": "text"}],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"type\": \"BLOG\",\n    \"id\": 1\n}",
+							"options": {"raw": {"language": "json"}}
+						},
+						"url": {"raw": "{{base_url}}/v1/likes/toggle", "host": ["{{base_url}}"], "path": ["v1", "likes", "toggle"]},
+						"description": "Send POST request to toggle like. If not liked, it creates a like. If already liked, it unlikes it.\n\nBody requires:\n- `type`: 'BLOG' or 'COMMENT'\n- `id`: The ID of the Blog or Comment."
+					},
+					"response": [
+						{
+							"name": "200 Liked Successfully",
+							"originalRequest": {
+								"method": "POST",
+								"header": [{"key": "Accept", "value": "application/json"}],
+								"body": {"mode": "raw", "raw": "{\n    \"type\": \"BLOG\",\n    \"id\": 1\n}", "options": {"raw": {"language": "json"}}},
+								"url": {"raw": "{{base_url}}/v1/likes/toggle", "host": ["{{base_url}}"], "path": ["v1", "likes", "toggle"]}
+							},
+							"status": "OK", "code": 200, "_postman_previewlanguage": "json",
+							"header": [{"key": "Content-Type", "value": "application/json"}],
+							"cookie": [],
+							"body": "{\n    \"success\": true,\n    \"message\": \"Blog liked successfully\",\n    \"data\": {\n        \"is_liked\": true\n    }\n}"
+						},
+						{
+							"name": "200 Unliked Successfully",
+							"originalRequest": {
+								"method": "POST",
+								"header": [{"key": "Accept", "value": "application/json"}],
+								"body": {"mode": "raw", "raw": "{\n    \"type\": \"BLOG\",\n    \"id\": 1\n}", "options": {"raw": {"language": "json"}}},
+								"url": {"raw": "{{base_url}}/v1/likes/toggle", "host": ["{{base_url}}"], "path": ["v1", "likes", "toggle"]}
+							},
+							"status": "OK", "code": 200, "_postman_previewlanguage": "json",
+							"header": [{"key": "Content-Type", "value": "application/json"}],
+							"cookie": [],
+							"body": "{\n    \"success\": true,\n    \"message\": \"Blog unliked successfully\",\n    \"data\": {\n        \"is_liked\": false\n    }\n}"
+						},
+						{
+							"name": "422 Validation Error",
+							"originalRequest": {
+								"method": "POST",
+								"header": [{"key": "Accept", "value": "application/json"}],
+								"body": {"mode": "raw", "raw": "{\n    \"type\": \"POST\",\n    \"id\": 1\n}", "options": {"raw": {"language": "json"}}},
+								"url": {"raw": "{{base_url}}/v1/likes/toggle", "host": ["{{base_url}}"], "path": ["v1", "likes", "toggle"]}
+							},
+							"status": "Unprocessable Entity", "code": 422, "_postman_previewlanguage": "json",
+							"header": [{"key": "Content-Type", "value": "application/json"}],
+							"cookie": [],
+							"body": "{\n    \"success\": false,\n    \"message\": \"The selected type is invalid.\",\n    \"data\": []\n}"
+						},
+						{
+							"name": "403 Forbidden (Admin/Maintainer)",
+							"originalRequest": {
+								"method": "POST",
+								"header": [{"key": "Accept", "value": "application/json"}],
+								"body": {"mode": "raw", "raw": "{\n    \"type\": \"BLOG\",\n    \"id\": 1\n}", "options": {"raw": {"language": "json"}}},
+								"url": {"raw": "{{base_url}}/v1/likes/toggle", "host": ["{{base_url}}"], "path": ["v1", "likes", "toggle"]}
+							},
+							"status": "Forbidden", "code": 403, "_postman_previewlanguage": "json",
+							"header": [{"key": "Content-Type", "value": "application/json"}],
+							"cookie": [],
+							"body": "{\n    \"success\": false,\n    \"message\": \"You are not authorized to perform this action.\",\n    \"data\": []\n}"
+						}
+					]
+				}
+			]
+		}
+	],
+	"variable": [
+		{"key": "base_url", "value": "http://localhost:8000/api", "type": "string"},
+		{"key": "token", "value": "", "type": "string", "description": "Paste your Bearer token here after login"}
+	]
+}

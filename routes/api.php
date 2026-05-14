@@ -16,6 +16,8 @@ Route::prefix('v1')->group(function () {
         Route::post('users', [UserController::class, 'store']);
         // 3. USER-EDIT
         Route::put('user/profile', [UserController::class, 'updateSelf']);
+        // Extra: Profile Get
+        Route::get('user', [UserController::class, 'me']);
 
         // 4. BLOG-CREATE
         Route::post('blogs', [BlogController::class, 'store']);

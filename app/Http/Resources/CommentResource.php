@@ -15,9 +15,7 @@ class CommentResource extends JsonResource
             'id'          => $this->id,
             'description' => $this->description,
             'likes_count' => $this->likes_count ?? 0,
-            'is_liked'    => $this->whenLoaded('likes', fn() =>
-                $this->likes->contains('user_id', $request->user()?->id)
-            , false),
+            'is_liked'    => (bool) ($this->is_liked ?? false),
             'user'        => [
                 'id'    => $this->user->id,
                 'name'  => $this->user->name,

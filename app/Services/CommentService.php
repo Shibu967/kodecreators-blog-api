@@ -13,8 +13,9 @@ class CommentService
     public function list(Blog $blog, array $filters, ?int $userId): LengthAwarePaginator
     {
         $query = $blog->comments()
-            ->with(['user', 'likes'])
-            ->withCount('likes');
+            ->with(['user'])
+            ->withCount('likes')
+            ->withExists(['likes as is_liked' => fn($q) => $q->where('user_id', $userId)]);
 
         if (!empty($filters['search'])) {
             $query->where('description', 'like', "%{$filters['search']}%");
@@ -38,7 +39,10 @@ class CommentService
             'description' => $description,
         ]);
 
-        return $comment->load(['user', 'likes'])->loadCount('likes');
+        return Comment::with(['user'])
+            ->withCount('likes')
+            ->withExists(['likes as is_liked' => fn($q) => $q->where('user_id', $userId)])
+            ->findOrFail($comment->id);
     }
 
     public function delete(Comment $comment): void

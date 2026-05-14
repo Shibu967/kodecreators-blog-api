@@ -14,8 +14,9 @@ class BlogService
     public function list(array $filters, ?int $userId): LengthAwarePaginator
     {
         $query = Blog::query()
-            ->with(['user', 'likes'])
-            ->withCount(['comments', 'likes']);
+            ->with(['user'])
+            ->withCount(['comments', 'likes'])
+            ->withExists(['likes as is_liked' => fn($q) => $q->where('user_id', $userId)]);
 
         if (!empty($filters['search'])) {
             $search = $filters['search'];
@@ -58,7 +59,10 @@ class BlogService
 
         $blog->update($data);
 
-        return $blog->fresh(['user', 'likes'])?->loadCount(['comments', 'likes']);
+        return Blog::with(['user'])
+            ->withCount(['comments', 'likes'])
+            ->withExists(['likes as is_liked' => fn($q) => $q->where('user_id', auth()->id())])
+            ->findOrFail($blog->id);
     }
 
     public function delete(Blog $blog): void

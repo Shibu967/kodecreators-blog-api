@@ -18,9 +18,7 @@ class BlogResource extends JsonResource
             'image'          => $this->image ? asset('storage/' . $this->image) : null,
             'comments_count' => $this->comments_count ?? 0,
             'likes_count'    => $this->likes_count ?? 0,
-            'is_liked'       => $this->whenLoaded('likes', fn() =>
-                $this->likes->contains('user_id', $request->user()?->id)
-            , false),
+            'is_liked'       => (bool) ($this->is_liked ?? false),
             'user'           => [
                 'id'    => $this->user->id,
                 'name'  => $this->user->name,
